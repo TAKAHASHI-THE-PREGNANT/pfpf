@@ -16,6 +16,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Og -g")
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
+
 target_include_directories(${PROJECT_NAME} PUBLIC
                             "${CMAKE_SOURCE_DIR}/src"
                             "${CMAKE_SOURCE_DIR}/lib"

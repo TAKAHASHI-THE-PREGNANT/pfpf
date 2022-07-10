@@ -1,14 +1,18 @@
+#pragma once
+
 #include <array>
 
 namespace thuwerato {
-    template <class _ColorType>
-    concept ColorConcept = requires(_ColorType color)
-    {
-        color.r;
-        color.g;
-        color.b;
-        color.a;
-    };
+    namespace Concepts {
+        template <class _Color>
+        concept Color = requires(_Color color)
+        {
+            color.r;
+            color.g;
+            color.b;
+            color.a;
+        };
+    }
 
     class Color;
 }
@@ -30,17 +34,18 @@ public:
         this->a = 1.0f;
     }
 
-    template <thuwerato::ColorConcept _Color>
+    template <thuwerato::Concepts::Color _Color>
     Color(_Color&& color) : r(color.r), g(color.g), b(color.b), a(color.a) {}
 
-    template <thuwerato::ColorConcept _Color>
+    template <thuwerato::Concepts::Color _Color>
     Color(const _Color&& color) : r(color.r), g(color.g), b(color.b), a(color.a) {}
 
     ~Color() {
 
     }
 
-    float operator[](const int index){
+    float operator[](const int index) const
+    {
         return this->value[index];
     }
 };
