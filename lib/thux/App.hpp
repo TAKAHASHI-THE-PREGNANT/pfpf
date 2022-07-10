@@ -1,6 +1,6 @@
 #pragma once
 
-// #include <memory>
+#include <memory>
 #include <thuwerato/Color.hpp>
 #include "thux/Concepts.hpp"
 #include "sokol/sokol_gfx.h"
