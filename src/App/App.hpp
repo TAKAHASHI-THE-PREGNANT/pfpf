@@ -2,11 +2,10 @@
 
 #include <Color.hpp>
 #include "../Scene/Scene.hpp"
-#include "emsc.h"
 #include <any>
 #include <utility>
 
-#define __EMSCRIPTEN__ = 1 // debug
+// #define __EMSCRIPTEN__ = 1 // debug
 
 #define SOKOL_IMPL
 #if defined(_WIN32)
@@ -22,11 +21,15 @@
 #include "sokol_app.h"
 #include "sokol_gfx.h"
 #include "sokol_glue.h"
+#ifdef __EMSCRIPTEN__
+  #include "emsc.h"
+#endif
 
 class App {
 private:
   static inline sg_pass_action PassAction;
-  static inline Scene::Interface* Scene;
+  static inline Scene::Interface *Scene;
+  // sapp_desc skolAppDesc;
 
 public:
   App(){};
@@ -55,14 +58,20 @@ public:
     };
 
 public:
-  static inline void loadScene(Scene::Interface *scene) {
-    // TODO: あってるかわかんないのでデバッガでアドレス確認しとく一応
+    void loadScene(Scene::Interface *scene) {
+      // TODO: あってるかわかんないのでデバッガでアドレス確認しとく一応
+      App::Scene = scene;
+    }
+
+public:
+  static inline void transitionScene(Scene::Interface *scene) {
     App::Scene = scene;
   }
 
 public:
   static inline void update() {
 
+    // sceneクラスをupdateとdrawに分けてdrawの前に呼び出したほうがいいかも
     sg_begin_default_pass(&(App::PassAction), App::width(),
                           App::height());
 
@@ -74,6 +83,18 @@ public:
 
 public:
   static void cleanup(void) { sg_shutdown(); }
+
+public:
+  sapp_desc desc() {
+    return (sapp_desc) {
+      .init_cb = App::init,
+      .frame_cb = App::update,
+      .cleanup_cb = App::cleanup,
+      .window_title = "window title",
+      .width = 800, .height = 600,
+      .icon.sokol_default = true,
+    };
+  }
 
 public:
   static inline void initBackGroundColor(const float &r, const float &g,
